@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -14,16 +14,17 @@ use ESputnik\Object;
 /**
  * Class FieldDescription
  *
- * @property string $type
- * @property boolean $required
- * @property boolean $readonly
+ * @property string        $type
+ * @property boolean       $required
+ * @property boolean       $readonly
  * @property AllowedValues $allowedValues
  *
  * @link http://esputnik.com.ua/api/ns0_fieldDescription.html
  */
 class FieldDescription extends Object
 {
-    static protected $types = array(
+    /** @var array $types */
+    static protected $types = [
         'textfield',
         'combobox',
         'checkboxlist',
@@ -32,32 +33,24 @@ class FieldDescription extends Object
         'number',
         'datetime',
         'decimal'
-    );
-    /**
-     * @var string
-     */
+    ];
+
+    /** @var string $type */
     protected $type;
 
-    /**
-     * @var AllowedValues
-     */
+    /** @var AllowedValues $allowedValues */
     protected $allowedValues;
 
-    /**
-     * @var boolean
-     */
+    /** @var boolean $readonly */
     protected $required = false;
 
-    /**
-     * @var boolean
-     */
+    /** @var boolean $readonly */
     protected $readonly = false;
 
     /**
      * @param AllowedValues $allowedValues
-     * @return AllowedValues
      */
-    public function setAllowedValues($allowedValues)
+    public function setAllowedValues($allowedValues): void
     {
         $this->allowedValues = $allowedValues instanceof AllowedValues ? $allowedValues : new AllowedValues($allowedValues);
     }

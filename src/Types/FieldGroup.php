@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -14,7 +14,7 @@ use ESputnik\Object;
 /**
  * Class FieldGroup
  *
- * @property string $name
+ * @property string      $name
  * @property FieldInfo[] $fields
  *
  * @link http://esputnik.com.ua/api/ns0_fieldGroup.html
@@ -48,7 +48,8 @@ class FieldGroup extends Object
     {
         return array_reduce($this->fields, function ($result, FieldInfo $field) {
             $result[$field->id] = $field;
+
             return $result;
-        }, array());
+        }, []);
     }
 }

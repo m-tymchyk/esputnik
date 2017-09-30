@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -15,8 +15,8 @@ use ESputnik\Object;
  * Class AllowedValues
  *
  * @property string[] $possibleValues
- * @property int $minValue
- * @property int $maxValue
+ * @property int      $minValue
+ * @property int      $maxValue
  *
  * @link http://esputnik.com.ua/api/el_ns0_allowedValues.html
  */
@@ -25,7 +25,7 @@ class AllowedValues extends Object
     /**
      * @var string[]
      */
-    protected $possibleValues = array();
+    protected $possibleValues = [];
 
     /**
      * @var int

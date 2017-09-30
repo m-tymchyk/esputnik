@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -14,8 +14,8 @@ use ESputnik\Object;
 /**
  * Class Event
  *
- * @property string $eventTypeKey
- * @property string $keyValue
+ * @property string      $eventTypeKey
+ * @property string      $keyValue
  * @property Parameter[] $parameters
  * @property string[string] $parametersArray
  *
@@ -36,7 +36,7 @@ class EventDto extends Object
     /**
      * @var Parameter[]
      */
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * @param Parameter[] $parameters
@@ -56,7 +56,7 @@ class EventDto extends Object
      */
     public function addParameter($name, $value)
     {
-        $this->parameters[] = new Parameter(array('name' => $name, 'value' => $value));
+        $this->parameters[] = new Parameter(['name' => $name, 'value' => $value]);
     }
 
     /**
@@ -68,8 +68,9 @@ class EventDto extends Object
     {
         return array_reduce($this->parameters, function (array $result, Parameter $parameter) {
             $result[$parameter->name] = $parameter->value;
+
             return $result;
-        }, array());
+        }, []);
     }
 
     /**
@@ -79,12 +80,12 @@ class EventDto extends Object
      */
     public function setParametersArray(array $parameters)
     {
-        $this->parameters = array();
+        $this->parameters = [];
         foreach ($parameters as $name => $value) {
-            $this->parameters[] = new Parameter(array(
+            $this->parameters[] = new Parameter([
                 'naem'  => $name,
                 'value' => $value
-            ));
+            ]);
         }
     }
 }

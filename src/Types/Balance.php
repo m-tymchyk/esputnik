@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -17,8 +17,8 @@ use ESputnik\Object;
  * @property-read double $currentBalance
  * @property-read double $creditLimit
  * @property-read string $currency
- * @property-read int $bonusEmails
- * @property-read int $bonusSmses
+ * @property-read int    $bonusEmails
+ * @property-read int    $bonusSmses
  *
  * @link http://esputnik.com.ua/api/el_ns0_balance.html
  */

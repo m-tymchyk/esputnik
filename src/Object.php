@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik;
@@ -19,9 +19,10 @@ class Object implements \JsonSerializable
 {
     /**
      * Object constructor.
+     *
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         foreach ($data as $field => $value) {
             $this->__set($field, $value);
@@ -30,6 +31,7 @@ class Object implements \JsonSerializable
 
     /**
      * @param string $property
+     *
      * @return mixed
      * @throws ESException
      */
@@ -42,12 +44,14 @@ class Object implements \JsonSerializable
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+
         throw new ESException('Don`t get undefined property \'' . $property . '\'');
     }
 
     /**
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @throws ESException
      */
     public function __set($property, $value)
@@ -55,13 +59,16 @@ class Object implements \JsonSerializable
         $method = 'set' . ucfirst($property);
         if (method_exists($this, $method)) {
             $this->$method($value);
+
             return;
         }
 
         if (property_exists($this, $property)) {
             $this->$property = $value;
+
             return;
         }
+
         throw new ESException('Don`t set undefined property \'' . $property . '\'');
     }
 
@@ -72,13 +79,14 @@ class Object implements \JsonSerializable
     {
         $class = new ReflectionClass($this);
         $properties = $class->getProperties(ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PUBLIC);
-        $json = array();
+        $json = [];
         foreach ($properties as $property) {
             if ($property->isStatic()) {
                 continue;
             }
             $json[$property->name] = $this->{$property->name};
         }
+
         return $json;
     }
 }

@@ -4,10 +4,11 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik;
+
 use ESputnik\Types\SubscribeContact;
 
 /**
@@ -29,6 +30,7 @@ class ESputnik
      *
      * @param null $user
      * @param null $password
+     *
      * @return ESputnik
      */
     static public function id($user = null, $password = null)
@@ -36,6 +38,7 @@ class ESputnik
         if (static::$_id === null) {
             static::$_id = new static($user, $password);
         }
+
         return static::$_id;
     }
 
@@ -61,24 +64,25 @@ class ESputnik
     protected $httpResponse;
 
     /**
-     * ESputnik constructor
+     * ESputnik constructor.
      *
      * @param string $user
      * @param string $password
+     * @param array  $options
      */
-    public function __construct($user, $password)
+    public function __construct(string $user, string $password, array $options = [])
     {
         $this->curl = curl_init();
-        curl_setopt_array($this->curl, array(
+        curl_setopt_array($this->curl, [
             CURLOPT_HEADER         => true,
-            CURLOPT_HTTPHEADER     => array(
+            CURLOPT_HTTPHEADER     => [
                 'Accept: application/json',
                 'Content-Type: application/json'
-            ),
+            ],
             CURLOPT_USERPWD        => $user . ':' . $password,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CONNECTTIMEOUT => 2
-        ));
+            CURLOPT_CONNECTTIMEOUT => $options['timeout'] ?? 2
+        ]);
     }
 
     /**
@@ -101,6 +105,7 @@ class ESputnik
     public function getAddressBooks()
     {
         $response = $this->request('GET', 'addressbooks');
+
         return new Types\AddressBook($response['addressBook']);
     }
 
@@ -113,6 +118,7 @@ class ESputnik
     public function getUserOrganisationBalance()
     {
         $response = $this->request('GET', 'balance');
+
         return new Types\Balance($response['addressBook']);
     }
 
@@ -121,15 +127,16 @@ class ESputnik
      *
      * @param int $offset
      * @param int $limit
+     *
      * @return Types\CallOut[]
      * @throws ESException
      */
     public function getCallOutsSms($offset = 0, $limit = 10)
     {
-        $response = $this->request('GET', 'callouts/sms', array(
+        $response = $this->request('GET', 'callouts/sms', [
             'startindex' => $offset + 1,
             'maxrows'    => $limit
-        ));
+        ]);
 
         return array_map(function ($row) {
             return new Types\CallOut($row);
@@ -139,60 +146,65 @@ class ESputnik
     /**
      * Search for contacts.
      *
-     * @param int $offset
-     * @param int $limit
+     * @param int   $offset
+     * @param int   $limit
      * @param array $params
+     *
      * @return Types\Contacts
      * @throws ESException
      */
-    public function searchContacts($offset = 0, $limit = 500, array $params = array())
+    public function searchContacts($offset = 0, $limit = 500, array $params = [])
     {
-        $response = $this->request('GET', 'contacts', array_merge($params, array(
+        $response = $this->request('GET', 'contacts', array_merge($params, [
             'startindex' => $offset + 1,
             'maxrows'    => $limit
-        )), null, $headers);
+        ]), null, $headers);
 
-        return new Types\Contacts(array(
+        return new Types\Contacts([
             'totalCount' => $headers['TotalCount'],
             'contacts'   => $response
-        ));
+        ]);
     }
 
     /**
      * Add/update contacts.
      *
      * @param Types\ContactsBulkUpdate $contacts
+     *
      * @return mixed
      * @throws ESException
      * @todo untested
      */
     public function contactsBulkUpdate(Types\ContactsBulkUpdate $contacts)
     {
-        return $this->request('POST', 'contacts', array(), $contacts);
+        return $this->request('POST', 'contacts', [], $contacts);
     }
 
     /**
      * Get an email to the contact ID.
      *
      * @param int[] $ids
+     *
      * @return mixed
      * @throws ESException
      * @todo untested
      */
     public function getContactEmails(array $ids)
     {
-        $response = $this->request('GET', 'contacts/email', array('ids' => implode(',', $ids)));
+        $response = $this->request('GET', 'contacts/email', ['ids' => implode(',', $ids)]);
 
         return array_reduce($response['results'], function ($result, $item) {
             $result[$item['contactId']] = $item['email'];
+
             return $result;
-        }, array());
+        }, []);
     }
 
     /**
      * Get contact.
      *
      * @param int $id
+     *
      * @return Types\Contact
      * @throws ESException
      */
@@ -211,16 +223,19 @@ class ESputnik
      * Add contact.
      *
      * @param Types\Contact $contact
+     *
      * @return boolean;
      * @throws ESException
      */
     public function addContact(Types\Contact $contact)
     {
-        $result = $this->request('POST', 'contact', array(), $contact);
+        $result = $this->request('POST', 'contact', [], $contact);
         if (is_array($result) && array_key_exists('id', $result)) {
             $contact->id = $result['id'];
+
             return true;
         }
+
         return false;
     }
 
@@ -228,12 +243,13 @@ class ESputnik
      * Update contact.
      *
      * @param Types\Contact $contact
+     *
      * @return boolean
      * @throws ESException
      */
     public function updateContact(Types\Contact $contact)
     {
-        $response = $this->request('PUT', 'contact/' . $contact->id, array(), $contact);
+        $response = $this->request('PUT', 'contact/' . $contact->id, [], $contact);
 
         if ($this->httpCode === 404) {
             return false;
@@ -246,12 +262,13 @@ class ESputnik
      * Subscribe contact
      *
      * @param SubscribeContact $subscribeContact
+     *
      * @return bool
      * @throws ESException
      */
     public function subscribeContact(SubscribeContact $subscribeContact)
     {
-        $response = $this->request('POST', 'contact/subscribe', array(), $subscribeContact);
+        $response = $this->request('POST', 'contact/subscribe', [], $subscribeContact);
         if ($this->httpCode === 404) {
             return false;
         }
@@ -263,6 +280,7 @@ class ESputnik
      * Remove contact.
      *
      * @param int $contact
+     *
      * @return boolean
      * @throws ESException
      */
@@ -285,74 +303,78 @@ class ESputnik
      * Add email-in to the list unsubscribe.
      *
      * @param string[] $emails
+     *
      * @return bool
      * @throws ESException
      * @todo untested
      */
     public function addToUnsubscribed(array $emails)
     {
-        return $this->request('POST', 'emails/unsubscribed/add', array(), array('emails' => $emails)) !== false;
+        return $this->request('POST', 'emails/unsubscribed/add', [], ['emails' => $emails]) !== false;
     }
 
     /**
      * Remove email-s unsubscribe from the list.
      *
      * @param string[] $emails
+     *
      * @return bool
      * @throws ESException
      * @todo untested
      */
     public function deleteFromUnsubscribed(array $emails)
     {
-        return $this->request('POST', 'emails/unsubscribed/delete', array(), array('emails' => $emails)) !== false;
+        return $this->request('POST', 'emails/unsubscribed/delete', [], ['emails' => $emails]) !== false;
     }
 
     /**
      * Add New Event.
      *
      * @param Types\EventDto $event
+     *
      * @return boolean
      * @throws ESException
      * @todo untested
      */
     public function registerEvent(Types\EventDto $event)
     {
-        return $this->request('POST', 'event', array(), $event) !== false;
+        return $this->request('POST', 'event', [], $event) !== false;
     }
 
     /**
      * @param int $eventTypeId
      * @param int $start
      * @param int $end
-     * @return todo
+     *
      * @throws ESException
-     * @todo
+     * @todo Return statesman
      */
     public function resendEvents($eventTypeId, $start, $end)
     {
-        $this->request('GET', 'event', array(
+        $this->request('GET', 'event', [
             'eventTypeId' => $eventTypeId,
             'start'       => $start,
             'end'         => $end
-        ));
+        ]);
     }
 
     /**
      * Search groups.
      *
      * @param string $name
-     * @param int $offset
-     * @param int $limit
+     * @param int    $offset
+     * @param int    $limit
+     *
      * @return Types\Group[]
      * @throws ESException
      */
     public function searchGroups($name = '', $offset = 0, $limit = 500)
     {
-        $response = $this->request('GET', 'groups', array(
+        $response = $this->request('GET', 'groups', [
             'startindex' => $offset + 1,
             'maxrows'    => $limit,
             'name'       => $name
-        ));
+        ]);
 
         return array_map(function ($group) {
             return new Types\Group($group);
@@ -365,6 +387,7 @@ class ESputnik
      * @param int|Types/Group $group
      * @param int $offset
      * @param int $limit
+     *
      * @return Types\Contacts
      * @throws ESException
      */
@@ -374,15 +397,15 @@ class ESputnik
             $group = $group->id;
         }
 
-        $response = $this->request('GET', 'group/' . $group . '/contacts', array(
+        $response = $this->request('GET', 'group/' . $group . '/contacts', [
             'startindex' => $offset + 1,
             'maxrows'    => $limit
-        ), null, $headers);
+        ], null, $headers);
 
-        return new Types\Contacts(array(
+        return new Types\Contacts([
             'totalCount' => $headers['TotalCount'],
             'contacts'   => $response
-        ));
+        ]);
     }
 
     public function sendEmail()
@@ -399,15 +422,17 @@ class ESputnik
      * Add email-message.
      *
      * @param Types\EmailMessage $message
+     *
      * @return boolean
      * @throws ESException
      */
     public function addEmail(Types\EmailMessage $message)
     {
-        $response = $this->request('POST', 'messages/email', array(), $message);
+        $response = $this->request('POST', 'messages/email', [], $message);
 
         if (is_array($response) && array_key_exists('id', $response)) {
             $message->id = $response['id'];
+
             return true;
         }
 
@@ -418,18 +443,19 @@ class ESputnik
      * Search email-messages on the part of the name or label.
      *
      * @param string $search
-     * @param int $offset
-     * @param int $limit
+     * @param int    $offset
+     * @param int    $limit
+     *
      * @return Types\EmailMessage[]
      * @throws ESException
      */
     public function searchEmails($search = '', $offset = 0, $limit = 500)
     {
-        $response = $this->request('GET', 'messages/email', array(
+        $response = $this->request('GET', 'messages/email', [
             'startindex' => $offset + 1,
             'maxrows'    => $limit,
             'search'     => $search
-        ));
+        ]);
 
         return array_map(function ($message) {
             return new Types\EmailMessage($message);
@@ -440,6 +466,7 @@ class ESputnik
      * Get email-message.
      *
      * @param int $id
+     *
      * @return Types\EmailMessage
      * @throws ESException
      */
@@ -458,12 +485,13 @@ class ESputnik
      * Update email-message.
      *
      * @param Types\EmailMessage $message
+     *
      * @return boolean
      * @throws ESException
      */
     public function updateMessage(Types\EmailMessage $message)
     {
-        $response = $this->request('PUT', 'messages/email/' . $message->id, array(), $message);
+        $response = $this->request('PUT', 'messages/email/' . $message->id, [], $message);
 
         if ($this->httpCode === 404) {
             return false;
@@ -476,6 +504,7 @@ class ESputnik
      * Remove email-message.
      *
      * @param int|Types\EmailMessage $message
+     *
      * @return boolean
      * @throws ESException
      */
@@ -590,19 +619,21 @@ class ESputnik
     /**
      * Make request to ESputnik API
      *
-     * @param $method
-     * @param $action
+     * @param       $method
+     * @param       $action
      * @param array $query
      * @param mixed $data
      * @param array $headers [optional]
+     *
      * @return mixed
      * @throws ESException
      */
-    protected function request($method, $action, array $query = array(), $data = null, &$headers = null)
+    protected function request(string $method, string $action, array $query = [], $data = null, &$headers = null)
     {
-        curl_setopt($this->curl, CURLOPT_URL, 'https://esputnik.com.ua/api/v1/' . $action . '?' . http_build_query($query));
+        $requestUrl = 'https://esputnik.com.ua/api/v1/' . $action . '?' . http_build_query($query);
+        curl_setopt($this->curl, CURLOPT_URL, $requestUrl);
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, $method);
-        if (in_array($method, array('PUT', 'POST'), true)) {
+        if (in_array($method, ['PUT', 'POST'], true)) {
             $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $json);
         }
@@ -610,14 +641,21 @@ class ESputnik
         $response = curl_exec($this->curl);
 
         $this->httpCode = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
-        $header_size = curl_getinfo($this->curl, CURLINFO_HEADER_SIZE);
-        preg_match_all('/^(?<header>[^:]+):(?<value>.*)$/m', substr($response, 0, $header_size), $matches, PREG_SET_ORDER);
+        $headerSize = curl_getinfo($this->curl, CURLINFO_HEADER_SIZE);
+        preg_match_all(
+            '/^(?<header>[^:]+):(?<value>.*)$/m',
+            substr($response, 0, $headerSize),
+            $matches,
+            PREG_SET_ORDER
+        );
+
         $headers = array_reduce($matches, function ($result, $match) {
             $result[$match['header']] = trim($match['value']);
-            return $result;
-        }, array());
 
-        $this->httpResponse = mb_strlen($response) === $header_size ? '' : substr($response, $header_size);
+            return $result;
+        }, []);
+
+        $this->httpResponse = mb_strlen($response) === $headerSize ? '' : substr($response, $headerSize);
 
         switch ($this->httpCode) {
             case 401:
@@ -625,7 +663,6 @@ class ESputnik
             case 400:
                 throw new ESException('Request error: ' . $this->httpResponse, 400);
         }
-
 
         if ($this->httpResponse === false || curl_getinfo($this->curl, CURLINFO_HTTP_CODE) !== 200) {
             throw new ESException('Connection error: ' . $this->httpResponse, $this->httpCode);

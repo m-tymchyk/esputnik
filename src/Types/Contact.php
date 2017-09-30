@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -14,15 +14,15 @@ use ESputnik\Object;
 /**
  * Class Contact
  *
- * @property int $id
- * @property string $firstName
- * @property string $lastName
- * @property Channel[] $channels
- * @property Address $address
+ * @property int            $id
+ * @property string         $firstName
+ * @property string         $lastName
+ * @property Channel[]      $channels
+ * @property Address        $address
  * @property ContactField[] $fields
- * @property int $addressBookId
- * @property string $contactKey
- * @property Group[] $groups
+ * @property int            $addressBookId
+ * @property string         $contactKey
+ * @property Group[]        $groups
  *
  * @link http://esputnik.com.ua/api/el_ns0_contact.html
  */
@@ -46,7 +46,7 @@ class Contact extends Object
     /**
      * @var Channel[]
      */
-    protected $channels = array();
+    protected $channels = [];
 
     /**
      * @var Address
@@ -56,7 +56,7 @@ class Contact extends Object
     /**
      * @var ContactField[]
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * @var int
@@ -71,7 +71,7 @@ class Contact extends Object
     /**
      * @var Group[]
      */
-    protected $groups = array();
+    protected $groups = [];
 
     /**
      * @param Address $address
@@ -114,14 +114,15 @@ class Contact extends Object
     /**
      * @param string $type
      * @param string $value
+     *
      * @return Channel
      */
     public function addChannel($type, $value)
     {
-        return $this->channels[] = new Channel(array(
+        return $this->channels[] = new Channel([
             'channelType' => $type,
             'value'       => $value
-        ));
+        ]);
     }
 
     /**
@@ -131,7 +132,8 @@ class Contact extends Object
     {
         return array_reduce($this->fields, function ($result, ContactField $field) {
             $result[$field->id] = $field->value;
+
             return $result;
-        }, array());
+        }, []);
     }
 }

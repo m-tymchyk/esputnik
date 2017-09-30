@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -15,12 +15,12 @@ use ESputnik\Object;
  * Class Callout
  *
  * @property string $calloutName
- * @property int $groupId
+ * @property int    $groupId
  * @property string $groupName
  * @property string $date
- * @property int $sent
- * @property int $delivered
- * @property int $errors
+ * @property int    $sent
+ * @property int    $delivered
+ * @property int    $errors
  *
  * @link http://esputnik.com.ua/api/el_ns0_callout.html
  */

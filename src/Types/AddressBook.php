@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -14,8 +14,8 @@ use ESputnik\Object;
 /**
  * Class AddressBook
  *
- * @property int $addressBookId
- * @property string $name
+ * @property int          $addressBookId
+ * @property string       $name
  * @property FieldGroup[] $fieldGroups
  *
  * @link http://esputnik.com.ua/api/el_ns0_addressBook.html
@@ -35,7 +35,7 @@ class AddressBook extends Object
     /**
      * @var FieldGroup[]
      */
-    protected $fieldGroups = array();
+    protected $fieldGroups = [];
 
     /**
      * @param FieldGroup[] $groups
@@ -44,12 +44,11 @@ class AddressBook extends Object
     {
         //Несоответствие со описанием на сайте, костыль
         if (array_key_exists('name', $groups)) {
-            $groups = array($groups);
+            $groups = [$groups];
         }
 
         $this->fieldGroups = array_map(function ($group) {
             return $group instanceof FieldGroup ? $group : new FieldGroup($group);
         }, $groups);
     }
-
 }

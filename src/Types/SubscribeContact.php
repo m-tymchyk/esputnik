@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -15,13 +15,15 @@ use ESputnik\Object;
 /**
  * Class SubscribeContact
  *
- * @property Contact $contact
- * @property string $dedupeOn
+ * @property Contact  $contact
+ * @property string   $dedupeOn
  * @property string[] $groups
  * @link http://esputnik.com.ua/api/el_ns0_subscribeContact.html
  */
 class SubscribeContact extends Object
 {
+    const VALUES = ['email', 'sms'];
+
     /**
      * @var Contact
      */
@@ -35,7 +37,7 @@ class SubscribeContact extends Object
     /**
      * @var string[]
      */
-    protected $groups = array();
+    protected $groups = [];
 
     /**
      * @param Contact $contact
@@ -47,24 +49,20 @@ class SubscribeContact extends Object
 
     /**
      * @param string $dedupeOn
+     *
      * @throws ESException
      */
-    public function setDedupeOn($dedupeOn)
+    public function setDedupeOn(string $dedupeOn)
     {
-        static $values = array(
-            'email',
-            'sms'
-        );
-
-        if (!in_array($dedupeOn, $values)) {
-            throw new ESException('Property type must be one of ' . implode(', ', $values) . ' values.');
+        if (!in_array($dedupeOn, self::VALUES)) {
+            throw new ESException('Property type must be one of ' . implode(', ', self::VALUES) . ' values.');
         }
 
         $this->dedupeOn = $dedupeOn;
     }
 
     /**
-     * @param (string|Group)[] $groups
+     * @param string[]|Group[] $groups
      */
     public function setGroups(array $groups)
     {
@@ -72,6 +70,7 @@ class SubscribeContact extends Object
             if ($group instanceof Group) {
                 return $group->name;
             }
+
             return (string)$group;
         }, $groups);
     }

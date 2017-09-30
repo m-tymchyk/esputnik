@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -16,7 +16,7 @@ use ESputnik\Object;
 /**
  * Class Group
  *
- * @property int $id
+ * @property int    $id
  * @property string $name
  * @property string $type
  *
@@ -42,9 +42,10 @@ class Group extends Object
     /**
      * Search from all contacts in the group.
      *
-     * @param int $offset
-     * @param int $limit
+     * @param int      $offset
+     * @param int      $limit
      * @param ESputnik $id optional
+     *
      * @return Contacts|Contact[]
      */
     public function getContacts($offset = 0, $limit = 500, ESputnik $id = null)
@@ -52,6 +53,7 @@ class Group extends Object
         if ($id === null) {
             $id = ESputnik::id();
         }
+
         return $id->getGroupContacts($this, $offset, $limit);
     }
 
@@ -59,15 +61,16 @@ class Group extends Object
      * Set the type value
      *
      * @param string $type
+     *
      * @throws ESException
      */
     public function setType($type)
     {
-        static $values = array(
+        static $values = [
             'Static',
             'Dynamic',
             'Combined'
-        );
+        ];
 
         if (!in_array($type, $values)) {
             throw new ESException('Property type must be one of ' . implode(', ', $values) . ' values.');

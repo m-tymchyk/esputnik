@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -16,7 +16,7 @@ use ESputnik\Object;
  * Class Contacts
  *
  * @mixin Contact[]
- * @property int $totalCount
+ * @property int       $totalCount
  * @property Contact[] $contacts
  */
 class Contacts extends Object implements \Countable, \ArrayAccess, \Iterator
@@ -29,7 +29,7 @@ class Contacts extends Object implements \Countable, \ArrayAccess, \Iterator
     /**
      * @var Contact[]
      */
-    protected $contacts = array();
+    protected $contacts = [];
 
     /**
      * @param Contact[] $contacts

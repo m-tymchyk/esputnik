@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -14,7 +14,7 @@ use ESputnik\Object;
 /**
  * Class ContactField
  *
- * @property int $id
+ * @property int    $id
  * @property string $value
  *
  * @link http://esputnik.com.ua/api/ns0_contactField.html

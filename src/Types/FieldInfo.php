@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -14,8 +14,8 @@ use ESputnik\Object;
 /**
  * Class FieldInfo
  *
- * @property int $id
- * @property string $name
+ * @property int              $id
+ * @property string           $name
  * @property FieldDescription $description
  *
  * @link http://esputnik.com.ua/api/ns0_fieldInfo.html

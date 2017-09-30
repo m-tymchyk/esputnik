@@ -4,7 +4,7 @@
  *
  * @package ESputnik
  * @license MIT
- * @author Dmytro Kulyk <lnkvisitor.ts@gmail.com>
+ * @author  Dmytro Kulyk <lnkvisitor.ts@gmail.com>
  */
 
 namespace ESputnik\Types;
@@ -21,13 +21,9 @@ use ESputnik\Object;
  */
 class Version extends Object
 {
-    /**
-     * @var string
-     */
+    /** @var string $version */
     protected $version;
 
-    /**
-     * @var string
-     */
+    /** @var string $protocolVersion */
     protected $protocolVersion;
 }
